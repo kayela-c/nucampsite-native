@@ -1,6 +1,8 @@
 import { Platform, View } from 'react-native';
 import Constants from 'expo-constants';
 import DirectoryScreen from './DirectoryScreen';
+import ContactScreen from './ContactScreen';
+import AboutScreen from './AboutScreen';
 import CampsiteInfoScreen from './CampsiteInfoScreen';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -61,6 +63,39 @@ const DirectoryNavigator = () => {
     );
 };
 
+const AboutNavigator = () => {
+    const Stack = createStackNavigator();
+    return (
+        <Stack.Navigator
+            initialRouteName='About'
+            screenOptions={screenOptions}
+        >
+            <Stack.Screen
+                name='About'
+                component={AboutScreen}
+            />
+        </Stack.Navigator>
+    )
+};
+
+
+const ContactNavigator = () => {
+    const Stack = createStackNavigator();
+    return (
+        <Stack.Navigator
+            initialRouteName='Contact'
+            screenOptions={screenOptions}
+        >
+            <Stack.Screen
+                name='Contact'
+                component={ContactScreen}
+                options={{ title: 'Contact Us' }}
+            />
+        </Stack.Navigator>
+    )
+};
+
+
 const Main = () => {
 
     return (
@@ -83,6 +118,15 @@ const Main = () => {
                     name='Directory'
                     component={DirectoryNavigator}
                     options={{ title: 'Directory' }}
+                />
+                <Drawer.Screen
+                    name='About'
+                    component={AboutNavigator}
+                />
+                <Drawer.Screen
+                    name='Contact'
+                    component={ContactNavigator}
+                    options={{ title: 'Contact Us' }}
                 />
 
             </Drawer.Navigator>
