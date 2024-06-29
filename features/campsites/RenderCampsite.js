@@ -1,30 +1,26 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
-import {
-    Card,
-    Icon
-} from 'react-native-elements'
+import { StyleSheet, Text, View } from 'react-native';
+import { Card, Icon } from 'react-native-elements';
+import { baseUrl } from '../../shared/baseUrl';
 
 const RenderCampsite = (props) => {
-    const { campsite, markFavorite } = props;
+    const { campsite } = props;
     if (campsite) {
         return (
-            <Card containerStyle={StyleSheet.cardContainer}>
-                <Card.Image source={campsite.image}>
+            <Card containerStyle={styles.cardContainer}>
+                <Card.Image source={{ uri: baseUrl + campsite.image }}>
                     <View style={{ justifyContent: 'center', flex: 1 }}>
-                        <Text style={{
-                            color: 'white',
-                            fontSize: 20,
-                            textAlign: 'center',
-                            fontWeight: 'bold',
-                            padding: 10,
-                            backgroundColor: 'rgba(0, 0, 0, 0.5)'
-                        }}>{campsite.name}</Text>
+                        <Text
+                            style={{
+                                color: 'white',
+                                textAlign: 'center',
+                                fontSize: 20
+                            }}
+                        >
+                            {campsite.name}
+                        </Text>
                     </View>
                 </Card.Image>
                 <Text style={{ margin: 20 }}>{campsite.description}</Text>
-
-
                 <Icon
                     name={props.isFavorite ? 'heart' : 'heart-o'}
                     type='font-awesome'
@@ -37,15 +33,11 @@ const RenderCampsite = (props) => {
                             : props.markFavorite()
                     }
                 />
-
-
             </Card>
-        )
+        );
     }
     return <View />;
 };
-
-
 
 const styles = StyleSheet.create({
     cardContainer: {
@@ -55,6 +47,4 @@ const styles = StyleSheet.create({
     }
 });
 
-
-
-export default RenderCampsite
+export default RenderCampsite;
