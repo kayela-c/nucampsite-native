@@ -20,16 +20,10 @@ const commentsSlice = createSlice({
     initialState: { isLoading: true, errMess: null, commentsArray: [] },
     reducers: {
         addComment: (state, action) => {
-            if (comments.includes(action.payload)) {
-                return comments.filter(
-                    (comment) => comment.id !== action.payload.id
-                );
-            } else {
-                comments.push(action.payload);
-            }
-
+            state.commentsArray.push(action.payload);
         }
     },
+    
     extraReducers: (builder) => {
         builder
             .addCase(fetchComments.pending, (state) => {
@@ -53,18 +47,12 @@ const commentsSlice = createSlice({
 export const postComment = createAsyncThunk(
     'comments/postComment',
     async (payload, { dispatch, getState }) => {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                const { comments } = getState();
-                const newComment = {
-                    ...payload,
-                    date: new Date().toISOString(),
-                    id: comments.commentsArray.length,
-                };
-                dispatch(addComment(payload));
-                resolve(newComment);
-            }, 2000);
-        });
+        setTimeout(() => {
+            const { comments } = getState();
+            payload.date = new Date().toISOString();
+            payload.id = comments.commentsArray.length;
+            dispatch(addComment(payload));
+        }, 2000);
     }
 );
 
