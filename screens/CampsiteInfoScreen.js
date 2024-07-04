@@ -94,45 +94,84 @@ const CampsiteInfoScreen = ({ route }) => {
                     />
                     <Input
                         placeholder='Author'
+////////// FIX 1 & 2: The "leftIcon" and "leftIconContainerStyle" properties are expressed as objects, not strings.
+// OLD CODE:
+/*
                         leftIcon='user-o'
                         leftIconContainerStyle='paddingRight: 10'
+*/
+                        leftIcon={{ type: 'font-awesome', name: 'user-o' }}
+                        leftIconContainerStyle={{ paddingRight: 10 }}
+////////// END FIX 1 & 2
                         onChangeText={(author) => setAuthor(author)}
                         value={author}
+////////// NOTE: Input components are self-terminating -- no beginning and ending tags.
+// OLD CODE:
+/*
                     >
 
                     </Input>
+*/
+                    />
+{
+////////// END NOTE
+}
                     <Input
 
                         placeholder='Comment'
-                        leftIcon='comment-o'
+////////// FIX 3: Same here, the "leftIcon" prop is expressed as an object.
+// OLD CODE:                        leftIcon='comment-o'
+                        leftIcon={{ type: 'font-awesome', name: 'comment-o' }}
+////////// END FIX 3
                         leftIconContainerStyle={{ paddingRight: 10 }}
                         onChangeText={(text) => setText(text)}
                         value={text}
+////////// NOTE: Same here, Input components are self-terminating.
+// OLD CODE:
+/*
                     >
 
                     </Input>
-                </View>
-                <View style={{ margin: 10 }}>
-                    <Button
-                        onPress={() => {
-                            handleSubmit();
-                            resetForm();
-                            setShowModal(!showModal);
-                        }}
-                        color='#5637DD'
-                        title='Submit'
+*/
                     />
+{
+////////// END NOTE
+
+////////// FIX 4.1: The View component with the "modal" style is supposed to wrap the entire contents of the modal window, buttons included. I will move the
+// closing of the View below the buttons and comment it out here.
+/*              </View> */
+////////// END FIX 4.1
+}
+                    <View style={{ margin: 10 }}>
+                        <Button
+                            onPress={() => {
+                                handleSubmit();
+                                resetForm();
+////////// FIX 4: handleSubmit already closes the modal. There is no need for it here as well. I will comment it out.
+/*                            setShowModal(!showModal); */
+////////// END FIX 4
+                            }}
+                            color='#5637DD'
+                            title='Submit'
+                        />
+                    </View>
+                    <View style={{ margin: 10 }}>
+                        <Button
+                            onPress={() => {
+                                setShowModal(!showModal);
+                                resetForm();
+                            }}
+                            color='#808080'
+                            title='Cancel'
+                        />
+                    </View>
+{
+////////// FIX 4.2: Here's where the View should close.
+}
                 </View>
-                <View style={{ margin: 10 }}>
-                    <Button
-                        onPress={() => {
-                            setShowModal(!showModal);
-                            resetForm();
-                        }}
-                        color='#808080'
-                        title='Cancel'
-                    />
-                </View>
+{
+////////// END FIX 4.2
+}
             </Modal>
         </>
     );
