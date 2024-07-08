@@ -1,20 +1,21 @@
-import { FlatList, StyleSheet, Text, View, Button, Modal } from 'react-native';
+import { useState } from 'react';
+import { Button, FlatList, Modal, StyleSheet, Text, View } from 'react-native';
+import { Input, Rating } from 'react-native-elements';
 import { useSelector, useDispatch } from 'react-redux';
 import RenderCampsite from '../features/campsites/RenderCampsite';
 import { toggleFavorite } from '../features/favorites/favoritesSlice';
-import { useState } from 'react';
-import { Input, Rating } from 'react-native-elements';
 import { postComment } from '../features/comments/commentsSlice';
+import * as Animatable from 'react-native-animatable';
 
 const CampsiteInfoScreen = ({ route }) => {
     const { campsite } = route.params;
     const comments = useSelector((state) => state.comments);
     const favorites = useSelector((state) => state.favorites);
-    const dispatch = useDispatch();
     const [showModal, setShowModal] = useState(false);
     const [rating, setRating] = useState(5);
     const [author, setAuthor] = useState('');
     const [text, setText] = useState('');
+    const dispatch = useDispatch();
 
     const handleSubmit = () => {
         const newComment = {
@@ -24,27 +25,24 @@ const CampsiteInfoScreen = ({ route }) => {
             campsiteId: campsite.id
         };
         dispatch(postComment(newComment));
-        setShowModal(!showModal)
+        setShowModal(!showModal);
     };
 
     const resetForm = () => {
         setRating(5);
         setAuthor('');
         setText('');
-    }
+    };
 
     const renderCommentItem = ({ item }) => {
         return (
             <View style={styles.commentItem}>
                 <Text style={{ fontSize: 14 }}>{item.text}</Text>
                 <Rating
-                    readonly
                     startingValue={item.rating}
                     imageSize={10}
-                    style={{
-                        paddingVertical: '5%',
-                        alignItems: 'flex-start'
-                    }}
+                    readonly
+                    style={{ alignItems: 'flex-start', paddingVertical: '5%' }}
                 />
                 <Text style={{ fontSize: 12 }}>
                     {`-- ${item.author}, ${item.date}`}
@@ -54,7 +52,7 @@ const CampsiteInfoScreen = ({ route }) => {
     };
 
     return (
-        <>
+        <Animatable.View animation='fadeInUp' duration={2000} delay={1000}>
             <FlatList
                 data={comments.commentsArray.filter(
                     (comment) => comment.campsiteId === campsite.id
@@ -70,7 +68,9 @@ const CampsiteInfoScreen = ({ route }) => {
                         <RenderCampsite
                             campsite={campsite}
                             isFavorite={favorites.includes(campsite.id)}
-                            markFavorite={() => dispatch(toggleFavorite(campsite.id))}
+                            markFavorite={() =>
+                                dispatch(toggleFavorite(campsite.id))
+                            }
                             onShowModal={() => setShowModal(!showModal)}
                         />
                         <Text style={styles.commentsTitle}>Comments</Text>
@@ -82,7 +82,6 @@ const CampsiteInfoScreen = ({ route }) => {
                 transparent={false}
                 visible={showModal}
                 onRequestClose={() => setShowModal(!showModal)}
-
             >
                 <View style={styles.modal}>
                     <Rating
@@ -94,62 +93,23 @@ const CampsiteInfoScreen = ({ route }) => {
                     />
                     <Input
                         placeholder='Author'
-////////// FIX 1 & 2: The "leftIcon" and "leftIconContainerStyle" properties are expressed as objects, not strings.
-// OLD CODE:
-/*
-                        leftIcon='user-o'
-                        leftIconContainerStyle='paddingRight: 10'
-*/
                         leftIcon={{ type: 'font-awesome', name: 'user-o' }}
                         leftIconContainerStyle={{ paddingRight: 10 }}
-////////// END FIX 1 & 2
                         onChangeText={(author) => setAuthor(author)}
                         value={author}
-////////// NOTE: Input components are self-terminating -- no beginning and ending tags.
-// OLD CODE:
-/*
-                    >
-
-                    </Input>
-*/
                     />
-{
-////////// END NOTE
-}
                     <Input
-
                         placeholder='Comment'
-////////// FIX 3: Same here, the "leftIcon" prop is expressed as an object.
-// OLD CODE:                        leftIcon='comment-o'
                         leftIcon={{ type: 'font-awesome', name: 'comment-o' }}
-////////// END FIX 3
                         leftIconContainerStyle={{ paddingRight: 10 }}
                         onChangeText={(text) => setText(text)}
                         value={text}
-////////// NOTE: Same here, Input components are self-terminating.
-// OLD CODE:
-/*
-                    >
-
-                    </Input>
-*/
                     />
-{
-////////// END NOTE
-
-////////// FIX 4.1: The View component with the "modal" style is supposed to wrap the entire contents of the modal window, buttons included. I will move the
-// closing of the View below the buttons and comment it out here.
-/*              </View> */
-////////// END FIX 4.1
-}
                     <View style={{ margin: 10 }}>
                         <Button
                             onPress={() => {
                                 handleSubmit();
                                 resetForm();
-////////// FIX 4: handleSubmit already closes the modal. There is no need for it here as well. I will comment it out.
-/*                            setShowModal(!showModal); */
-////////// END FIX 4
                             }}
                             color='#5637DD'
                             title='Submit'
@@ -165,15 +125,9 @@ const CampsiteInfoScreen = ({ route }) => {
                             title='Cancel'
                         />
                     </View>
-{
-////////// FIX 4.2: Here's where the View should close.
-}
                 </View>
-{
-////////// END FIX 4.2
-}
             </Modal>
-        </>
+        </Animatable.View>
     );
 };
 
@@ -193,9 +147,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff'
     },
     modal: {
-        margin: 20,
         justifyContent: 'center',
-    },
+        margin: 20
+    }
 });
 
 export default CampsiteInfoScreen;
