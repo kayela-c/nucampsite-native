@@ -30,13 +30,12 @@ const ReservationScreen = () => {
         console.log('hikeIn:', hikeIn);
         console.log('date:', date);
 
-        const message = `Number of Campers: ${campers}
-        \nHike-In? ${hikeIn}
-        \nDate: ${date.toLocaleDateString('en-US')}`;
-
         Alert.alert(
             'Begin Search?',
-            message,
+
+            `Number of Campers: ${campers}
+                \nHike-In? ${hikeIn}
+                \nDate: ${date.toLocaleDateString('en-US')}`,
 
             [
                 {
