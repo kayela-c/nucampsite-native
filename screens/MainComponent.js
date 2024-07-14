@@ -167,7 +167,7 @@ const LoginNavigator = () => {
                         <Icon
                             name={
                                 getFocusedRouteNameFromRoute(route) ===
-                                'Register'
+                                    'Register'
                                     ? 'user-plus'
                                     : 'sign-in'
                             }
@@ -239,19 +239,25 @@ const Main = () => {
         dispatch(fetchComments());
     }, [dispatch]);
 
-    useEffect(() => {
+    async function showNetInfo() {
+        const state = await NetInfo.fetch();
         NetInfo.fetch().then((connectionInfo) => {
             Platform.OS === 'ios'
                 ? Alert.alert(
-                      'Initial Network Connectivity Type:',
-                      connectionInfo.type
-                  )
+                    'Initial Network Connectivity Type:',
+                    connectionInfo.type
+                )
                 : ToastAndroid.show(
-                      'Initial Network Connectivity Type: ' +
-                          connectionInfo.type,
-                      ToastAndroid.LONG
-                  );
+                    'Initial Network Connectivity Type: ' +
+                    connectionInfo.type,
+                    ToastAndroid.LONG
+                );
         });
+
+    }
+
+    useEffect(() => {
+        showNetInfo();
 
         const unsubscribeNetInfo = NetInfo.addEventListener(
             (connectionInfo) => {
@@ -294,7 +300,7 @@ const Main = () => {
             <Drawer.Navigator
                 initialRouteName='HomeDrawer'
                 drawerContent={CustomDrawerContent}
-                screenOptions={{ 
+                screenOptions={{
                     headerShown: false,
                     drawerStyle: { backgroundColor: '#CEC8FF' }
                 }}
