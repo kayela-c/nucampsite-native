@@ -240,20 +240,27 @@ const Main = () => {
     }, [dispatch]);
 
     async function showNetInfo() {
-        const state = await NetInfo.fetch();
-        NetInfo.fetch().then((connectionInfo) => {
-            Platform.OS === 'ios'
-                ? Alert.alert(
-                    'Initial Network Connectivity Type:',
-                    connectionInfo.type
-                )
-                : ToastAndroid.show(
-                    'Initial Network Connectivity Type: ' +
-                    connectionInfo.type,
-                    ToastAndroid.LONG
-                );
-        });
-
+        ////////// FIX 1: You cannot mix then/catch with async/await. Just assign the result of the awaited NetInfo.fetch() to connectionInfo.
+        // OLD CODE:
+        /*
+                const state = await NetInfo.fetch();
+                NetInfo.fetch().then((connectionInfo) => {
+        */
+        const connectionInfo = await NetInfo.fetch();
+        ////////// END FIX 1
+        Platform.OS === 'ios'
+            ? Alert.alert(
+                'Initial Network Connectivity Type:',
+                connectionInfo.type
+            )
+            : ToastAndroid.show(
+                'Initial Network Connectivity Type: ' +
+                connectionInfo.type,
+                ToastAndroid.LONG
+            );
+        ////////// FIX 2: Removing the closure for the "then" we don't need.
+        /*         });  */
+        ////////// END FIX 2
     }
 
     useEffect(() => {
@@ -298,7 +305,10 @@ const Main = () => {
             }}
         >
             <Drawer.Navigator
-                initialRouteName='HomeDrawer'
+                ////////// NOTE: There is no "HomeDrawer" component, only "Home". This is a mistake in the NuCamp code.
+                // OLD CODE:                initialRouteName='HomeDrawer'
+                initialRouteName='Home'
+                ////////// END NOTE
                 drawerContent={CustomDrawerContent}
                 screenOptions={{
                     headerShown: false,
